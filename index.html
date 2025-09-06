@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural DOOM Controller - CL1 Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-color-scheme="dark">
+    <div class="dashboard">
+        <header class="dashboard-header">
+            <h1>🧠 Neural DOOM Controller - CL1 Edition</h1>
+            <div class="connection-status">
+                <span class="status-indicator disconnected" id="connectionStatus"></span>
+                <span id="connectionText">Disconnected</span>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- VizDoom Game Stats -->
+            <section class="panel game-panel">
+                <h2>🎮 VizDoom Game State</h2>
+                <div class="vizdoom-stats">
+                    <div class="stat-row">
+                        <div class="stat-item">
+                            <span>❤️ Health:</span>
+                            <span id="playerHealth">100</span>
+                            <div class="health-bar" id="healthBar"></div>
+                        </div>
+                        <div class="stat-item">
+                            <span>🛡️ Armor:</span>
+                            <span id="playerArmor">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-item">
+                            <span>🔫 Ammo:</span>
+                            <span id="playerAmmo">50</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>⏱️ Runtime:</span>
+                            <span id="runtime">0.0s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-status">
+                    <div id="armorStatus" class="status-indicator">🛡️ Searching for armor...</div>
+                    <div id="enemyIndicator" class="status-indicator">👹 Scanning for enemies...</div>
+                    <div id="cl1Status" class="status-indicator">🧠 CL1 Status: Not Connected</div>
+                </div>
+            </section>
+
+            <!-- Enhanced Neural Activity Monitor -->
+            <section class="panel neural-panel">
+                <h2>🧠 CL1 Biological Neural Networks</h2>
+                <div class="neural-networks">
+                    <div class="network-group">
+                        <h3>📍 Navigation Network (Electrodes 0-199)</h3>
+                        <div class="activity-meter">
+                            <div class="meter-bar" id="navMeter">
+                                <div class="meter-fill"></div>
+                            </div>
+                            <span class="activity-value" id="navActivity">0.0</span>
+                        </div>
+                        <div class="network-info">Movement & Pathfinding</div>
+                    </div>
+                    <div class="network-group">
+                        <h3>⚔️ Combat Network (Electrodes 200-399)</h3>
+                        <div class="activity-meter">
+                            <div class="meter-bar" id="combatMeter">
+                                <div class="meter-fill"></div>
+                            </div>
+                            <span class="activity-value" id="combatActivity">0.0</span>
+                        </div>
+                        <div class="network-info">Enemy Detection & Elimination</div>
+                    </div>
+                    <div class="network-group">
+                        <h3>🎯 Tactical Network (Electrodes 400-599)</h3>
+                        <div class="activity-meter">
+                            <div class="meter-bar" id="tacticalMeter">
+                                <div class="meter-fill"></div>
+                            </div>
+                            <span class="activity-value" id="tacticalActivity">0.0</span>
+                        </div>
+                        <div class="network-info">Strategic Decision Making</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h4>Real-Time Neural Activity</h4>
+                    <canvas id="neuralChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Enhanced Control Panel -->
+            <section class="panel control-panel">
+                <h2>🎛️ CL1 Neural Experiment Control</h2>
+                <div class="control-buttons">
+                    <button id="connectBtn" class="btn btn-primary">🔗 Connect CL1</button>
+                    <button id="startBtn" class="btn btn-success" disabled>🚀 Start VizDoom Experiment</button>
+                    <button id="stopBtn" class="btn btn-warning" disabled>⏹️ Stop</button>
+                    <button id="resetBtn" class="btn btn-secondary">🔄 New Episode</button>
+                    <button id="emergencyBtn" class="btn btn-danger">🚨 Emergency Stop</button>
+                </div>
+                <div class="current-status">
+                    <div class="info-item">
+                        <span>🎮 Neural Action:</span>
+                        <span id="currentAction" class="action-display">idle</span>
+                    </div>
+                    <div class="info-item">
+                        <span>🧠 CL1 Device:</span>
+                        <span id="cl1DeviceType" class="device-type">Not Connected</span>
+                    </div>
+                </div>
+                <div class="experiment-info">
+                    <p>💡 This experiment uses <strong>Dynamic Subnetwork Specialization</strong></p>
+                    <p>🧠 Three biological neural networks cooperate to control VizDoom</p>
+                    <p>⚡ Live spike patterns from CL1 determine movement, combat, and strategy</p>
+                    <p>🔬 Automatic fallback to mock device if CL1 SDK not available</p>
+                </div>
+            </section>
+
+            <!-- Enhanced Performance Dashboard -->
+            <section class="panel performance-panel">
+                <h2>📊 VizDoom Performance Analytics</h2>
+                <div class="stats-grid">
+                    <div class="stat-item featured">
+                        <div class="stat-value" id="score">0</div>
+                        <div class="stat-label">🏆 VizDoom Score</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="armorPickups">0</div>
+                        <div class="stat-label">🛡️ Armor Found</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="enemyKills">0</div>
+                        <div class="stat-label">💥 Enemies Defeated</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h4>Performance Breakdown</h4>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="achievement-log">
+                    <h4>🏅 Neural Network Achievements</h4>
+                    <div id="achievementList" class="achievement-list">
+                        <div class="achievement-item">🧠 Biological neural networks initialized</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
